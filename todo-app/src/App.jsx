@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useState, useEffect } from 'react'
 import { Header } from './components/Header'
 import { Tabs } from './components/Tabs'
 import { TodoList } from './components/TodoList'
@@ -22,15 +22,16 @@ export default function App() {
         completed: false
       }
     ]);
+    handleSaveData(todos)
   }
 
   function handleCompleteTodo(index) {
-    console.log(index);
     let newTodoList = [...todos];
     let completedTodo = todos[index];
     completedTodo['completed'] = true;
     newTodoList[index] = completedTodo;
     setTodos(newTodoList);
+    handleSaveData(newTodoList);
   }
 
   function handleDeleteTodo(index) {
@@ -39,8 +40,21 @@ export default function App() {
     });
 
     setTodos(newTodoList);
+    handleSaveData(newTodoList);
 
   }
+
+  function handleSaveData(currentTodos) {
+    localStorage.setItem('todo-app', JSON.stringify({ todos: currentTodos }));
+  }
+
+  // empty dependency array tells us to run as soon as webpage is avaiable
+  // i.e. mimics componentDidMount
+  useEffect(() => {
+    if (!localStorage || !localStorage.getItem('todo-app')) { return; }
+    const db = JSON.parse(localStorage.getItem('todo-app'));
+    setTodos(Array.from(db.todos));
+  }, [])
 
   return (
     <>
