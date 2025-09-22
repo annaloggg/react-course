@@ -157,6 +157,11 @@ h3 {
   gap: 1rem;
 }
 
+.search-container {
+  display: flex;
+  flex-direction: row;
+}
+
 .stat-item {
   display: flex;
   align-items: center;
